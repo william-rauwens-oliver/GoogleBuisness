@@ -1,0 +1,15 @@
+{
+  "name": "google-business-comment",
+  "version": "1.0.0",
+  "main": "server.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "express": "^4.17.3",
+    "body-parser": "^1.19.1",
+    "node-fetch": "^2.6.7",
+    "dotenv": "^10.0.0"
+  }
+}

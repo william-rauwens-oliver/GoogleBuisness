@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commentaire du Magasin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+        #place-details {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        textarea {
+            width: calc(100% - 22px);
+            height: 100px;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: none;
+        }
+        button {
+            display: block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Commentaire pour le Magasin</h1>
+    <div id="place-details"></div>
+    <form id="comment-form">
+        <textarea id="comment" placeholder="Laisser un commentaire">Excellent service!</textarea>
+        <button type="submit">Envoyer</button>
+    </form>
+
+    <script>
+        async function getPlaceDetails(placeId) {
+            const response = await fetch(`/place-details?placeId=${placeId}`);
+            const data = await response.json();
+
+            if (data.status === "OK") {
+                const placeDetails = data;
+                document.getElementById('place-details').innerText = JSON.stringify(placeDetails, null, 2);
+
+                // Pré-remplir le commentaire basé sur les détails du magasin si besoin
+                document.getElementById('comment').value = `J'adore ce magasin! ${placeDetails.name} est fantastique!`;
+            } else {
+                document.getElementById('place-details').innerText = 'Détails du magasin non disponibles.';
+            }
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const placeId = urlParams.get('placeId');
+        if (placeId) {
+            getPlaceDetails(placeId);
+        }
+
+        // Soumettre le commentaire (à envoyer au serveur pour traitement)
+        document.getElementById('comment-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const comment = document.getElementById('comment').value;
+
+            const response = await fetch('/send-comment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    placeId: placeId,
+                    comment: comment
+                })
+            });
+
+            if (response.ok) {
+                alert('Commentaire envoyé avec succès');
+            } else {
+                alert('Erreur lors de l\'envoi du commentaire');
+            }
+        });
+    </script>
+</body>
+</html>
