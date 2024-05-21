@@ -18,7 +18,7 @@ app.get('/place-details', async (req, res) => {
     }
 
     try {
-        const response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=AIzaSyCPvUWmBOvojk2uFoUqz13b_kGpqULCjAQ`);
+        const response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&API_KEY`);
         const data = await response.json();
 
         // Vérifie si la requête a réussi
